@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"strings"
-
-	"time"
 
 	yymmdd "github.com/extrame/goyymmdd"
 )
@@ -49,42 +46,42 @@ type XfRk struct {
 }
 
 func (xf *XfRk) String(wb *WorkBook) string {
-	idx := int(xf.Index)
-	if len(wb.Xfs) > idx {
-		fNo := wb.Xfs[idx].formatNo()
-		if fNo >= 164 { // user defined format
-			if formatter := wb.Formats[fNo]; formatter != nil {
-				formatterLower := strings.ToLower(formatter.str)
-				if formatterLower == "general" ||
-					strings.Contains(formatter.str, "#") ||
-					strings.Contains(formatter.str, ".00") ||
-					strings.Contains(formatterLower, "m/y") ||
-					strings.Contains(formatterLower, "d/y") ||
-					strings.Contains(formatterLower, "m.y") ||
-					strings.Contains(formatterLower, "d.y") ||
-					strings.Contains(formatterLower, "h:") ||
-					strings.Contains(formatterLower, "д.г") {
-					//If format contains # or .00 then this is a number
-					return xf.Rk.String()
-				} else {
-					i, f, isFloat := xf.Rk.number()
-					if !isFloat {
-						f = float64(i)
-					}
-					t := timeFromExcelTime(f, wb.dateMode == 1)
-					return yymmdd.Format(t, formatter.str)
-				}
-			}
-			// see http://www.openoffice.org/sc/excelfileformat.pdf Page #174
-		} else if 14 <= fNo && fNo <= 17 || fNo == 22 || 27 <= fNo && fNo <= 36 || 50 <= fNo && fNo <= 58 { // jp. date format
-			i, f, isFloat := xf.Rk.number()
-			if !isFloat {
-				f = float64(i)
-			}
-			t := timeFromExcelTime(f, wb.dateMode == 1)
-			return t.Format(time.RFC3339) //TODO it should be international
-		}
-	}
+	// idx := int(xf.Index)
+	// if len(wb.Xfs) > idx {
+	// 	fNo := wb.Xfs[idx].formatNo()
+	// 	if fNo >= 164 { // user defined format
+	// 		if formatter := wb.Formats[fNo]; formatter != nil {
+	// 			formatterLower := strings.ToLower(formatter.str)
+	// 			if formatterLower == "general" ||
+	// 				strings.Contains(formatter.str, "#") ||
+	// 				strings.Contains(formatter.str, ".00") ||
+	// 				strings.Contains(formatterLower, "m/y") ||
+	// 				strings.Contains(formatterLower, "d/y") ||
+	// 				strings.Contains(formatterLower, "m.y") ||
+	// 				strings.Contains(formatterLower, "d.y") ||
+	// 				strings.Contains(formatterLower, "h:") ||
+	// 				strings.Contains(formatterLower, "д.г") {
+	// 				//If format contains # or .00 then this is a number
+	// 				return xf.Rk.String()
+	// 			} else {
+	// 				i, f, isFloat := xf.Rk.number()
+	// 				if !isFloat {
+	// 					f = float64(i)
+	// 				}
+	// 				t := timeFromExcelTime(f, wb.dateMode == 1)
+	// 				return yymmdd.Format(t, formatter.str)
+	// 			}
+	// 		}
+	// 		// see http://www.openoffice.org/sc/excelfileformat.pdf Page #174
+	// 	} else if 14 <= fNo && fNo <= 17 || fNo == 22 || 27 <= fNo && fNo <= 36 || 50 <= fNo && fNo <= 58 { // jp. date format
+	// 		i, f, isFloat := xf.Rk.number()
+	// 		if !isFloat {
+	// 			f = float64(i)
+	// 		}
+	// 		t := timeFromExcelTime(f, wb.dateMode == 1)
+	// 		return t.Format(time.RFC3339) //TODO it should be international
+	// 	}
+	// }
 	return xf.Rk.String()
 }
 
